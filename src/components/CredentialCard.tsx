@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import blueFabric from "@/assets/blue-fabric.jpg";
+import cardBackground from "@/assets/card-background.jpg";
 import {
   BG_COLORS,
   type CredentialState,
@@ -169,7 +169,7 @@ const CredentialCard = forwardRef<HTMLDivElement, CredentialCardProps>(
     const fontFam = `'${fontFamily}', sans-serif`;
     const cardShadow = `0 ${surface.shadow * 0.9 * scale}px ${surface.shadow * 1.9 * scale}px rgba(15, 23, 42, 0.24)`;
     const cardInset = borderStyle === "none" ? 10 : borderStyle === "thick" ? 18 : 16;
-    const logoStrokeWidth = ((logoStyle.strokePx - 10) / 12) * scale;
+    const logoStrokeWidth = Math.max(logoStyle.strokePx, 0) * 0.08 * scale;
     const logoOpacity = logoStyle.opacity / 100;
 
     const logoNode =
@@ -220,23 +220,26 @@ const CredentialCard = forwardRef<HTMLDivElement, CredentialCardProps>(
                 : logoConfig.accentMode === "last"
                   ? isLast && logoSegments.length > 1
                   : false;
+            const resolvedWeight = logoConfig.segmentWeights[index] ?? logoStyle.fontWeight;
 
             return (
               <span
                 key={`${segment}-${index}`}
                 style={{
                   color: useAccent ? palette.accentColor : palette.textColor,
-                  fontWeight: logoConfig.segmentWeights[index] ?? 700,
+                  fontWeight: resolvedWeight,
+                  fontVariationSettings: `'wght' ${resolvedWeight}`,
                   WebkitTextStrokeWidth: `${Math.max(logoStrokeWidth, 0)}px`,
                   WebkitTextStrokeColor:
-                    logoStrokeWidth > 0 ? "rgba(15, 23, 42, 0.16)" : "transparent",
+                    logoStrokeWidth > 0 ? "rgba(15, 23, 42, 0.12)" : "transparent",
                   textShadow:
                     logoStrokeWidth > 0
-                      ? `0 ${Math.max(1, logoStrokeWidth)}px ${Math.max(
+                      ? `0 ${Math.max(1, logoStrokeWidth * 0.6)}px ${Math.max(
                           1,
-                          logoStrokeWidth * 4,
-                        )}px rgba(15, 23, 42, 0.16)`
+                          logoStrokeWidth * 3,
+                        )}px rgba(15, 23, 42, 0.14)`
                       : "none",
+                  fontSynthesis: "none",
                 }}
               >
                 {segment}
@@ -351,11 +354,11 @@ const CredentialCard = forwardRef<HTMLDivElement, CredentialCardProps>(
                   position: "absolute",
                   inset: 0,
                   backgroundColor: "#0d2b5a",
-                  backgroundImage: `url(${blueFabric})`,
+                  backgroundImage: `url(${cardBackground})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
-                  backgroundBlendMode: "multiply",
-                  filter: "contrast(1.12) saturate(0.95) brightness(0.8)",
+                  backgroundRepeat: "no-repeat",
+                  filter: "contrast(1.08) saturate(0.92) brightness(0.82)",
                 }}
               />
               <div
@@ -363,7 +366,7 @@ const CredentialCard = forwardRef<HTMLDivElement, CredentialCardProps>(
                   position: "absolute",
                   inset: 0,
                   background:
-                    "linear-gradient(180deg, rgba(6, 21, 48, 0.18), rgba(6, 21, 48, 0.18))",
+                    "linear-gradient(180deg, rgba(4, 17, 40, 0.14), rgba(4, 17, 40, 0.22))",
                 }}
               />
             </>

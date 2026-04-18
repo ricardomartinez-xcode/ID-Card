@@ -25,6 +25,7 @@ export interface NombreStyle {
 
 export interface LogoStyle {
   fontSize: number;
+  fontWeight: number;
   letterSpacing: number;
   gap: number;
   paddingX: number;
@@ -163,6 +164,7 @@ export const DEFAULT_CREDENTIAL_STATE: CredentialState = {
   },
   logoStyle: {
     fontSize: 28,
+    fontWeight: 700,
     letterSpacing: 4,
     gap: 8,
     paddingX: 0,

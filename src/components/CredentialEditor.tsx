@@ -173,7 +173,7 @@ const CredentialEditor = ({
             .filter(Boolean);
 
     const nextWeights = Array.from({ length: Math.max(segments.length, 1) }, (_, index) => {
-      return value.logoConfig.segmentWeights[index] ?? 700;
+      return value.logoConfig.segmentWeights[index] ?? value.logoStyle.fontWeight;
     });
 
     return nextWeights;
@@ -396,11 +396,27 @@ const CredentialEditor = ({
                 </div>
               )}
 
+              <SliderRow
+                label="Peso base"
+                value={value.logoStyle.fontWeight}
+                onChange={(next) => {
+                  updateNested("logoStyle", { fontWeight: next });
+                  const segmentWeights = activeLogoSegments.map(
+                    (_, index) => value.logoConfig.segmentWeights[index] ?? next,
+                  );
+                  updateNested("logoConfig", { segmentWeights });
+                }}
+                min={100}
+                max={900}
+                step={100}
+                unit=""
+              />
+
               {activeLogoSegments.map((segment, index) => (
                 <div key={`${segment}-${index}`} className="space-y-2">
-                  <Label>{`Grosor ${index + 1}`}</Label>
+                  <Label>{`Peso segmento ${index + 1}`}</Label>
                   <Select
-                    value={String(value.logoConfig.segmentWeights[index] ?? 700)}
+                    value={String(value.logoConfig.segmentWeights[index] ?? value.logoStyle.fontWeight)}
                     onValueChange={(next) => {
                       const segmentWeights = [...value.logoConfig.segmentWeights];
                       segmentWeights[index] = Number(next);
@@ -440,9 +456,10 @@ const CredentialEditor = ({
           )}
 
           <SliderRow label="Tamano" value={value.logoStyle.fontSize} onChange={(next) => updateNested("logoStyle", { fontSize: next })} min={10} max={84} step={1} />
+          <SliderRow label="Peso base" value={value.logoStyle.fontWeight} onChange={(next) => updateNested("logoStyle", { fontWeight: next })} min={100} max={900} step={100} unit="" />
           <SliderRow label="Separacion con matricula" value={value.logoStyle.distanceToMatricula} onChange={(next) => updateNested("logoStyle", { distanceToMatricula: next })} min={0} max={80} step={2} />
           <SliderRow label="Espacio de separacion" value={value.logoStyle.segmentGap} onChange={(next) => updateNested("logoStyle", { segmentGap: next })} min={0} max={30} step={1} />
-          <SliderRow label="Grosor" value={value.logoStyle.strokePx} onChange={(next) => updateNested("logoStyle", { strokePx: next })} min={10} max={40} step={1} />
+          <SliderRow label="Trazo/contorno" value={value.logoStyle.strokePx} onChange={(next) => updateNested("logoStyle", { strokePx: next })} min={0} max={24} step={1} />
         </TabsContent>
 
         <TabsContent value="texto" className="space-y-4 rounded-[28px] border border-slate-200 bg-white p-4 shadow-sm">
